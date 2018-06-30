@@ -1,4 +1,6 @@
-﻿namespace PlayerLibrary.Structures.Songs
+﻿using System.IO;
+
+namespace PlayerLibrary.Structures.Songs
 {
     /// <summary>
     /// The abstract superclass that defines the base format for all song types.
@@ -43,21 +45,6 @@
         /// <summary>
         /// Loads the song.
         /// </summary>
-        public abstract void Load();
-
-        /// <summary>
-        /// Plays the song.
-        /// </summary>
-        public abstract void Play();
-
-        /// <summary>
-        /// Pauses the song.
-        /// </summary>
-        public abstract void Pause();
-
-        /// <summary>
-        /// Stops the song and unloads it.
-        /// </summary>
-        public abstract void Stop();
+        public abstract Stream Load();
     }
 }
