@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omniplayer", "Omniplayer\Omniplayer.csproj", "{B7ED568F-681A-4730-8B7D-8225FA20AD51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayerLibrary", "PlayerLibrary\PlayerLibrary.csproj", "{B6DF5667-4AC5-40C7-82A7-9516EE8B4351}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B7ED568F-681A-4730-8B7D-8225FA20AD51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7ED568F-681A-4730-8B7D-8225FA20AD51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7ED568F-681A-4730-8B7D-8225FA20AD51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7ED568F-681A-4730-8B7D-8225FA20AD51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6DF5667-4AC5-40C7-82A7-9516EE8B4351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6DF5667-4AC5-40C7-82A7-9516EE8B4351}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6DF5667-4AC5-40C7-82A7-9516EE8B4351}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6DF5667-4AC5-40C7-82A7-9516EE8B4351}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A8ED4FF4-BB43-404B-BDCB-FC9E1D6443D2}
+	EndGlobalSection
+EndGlobal
