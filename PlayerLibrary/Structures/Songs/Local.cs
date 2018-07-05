@@ -7,7 +7,7 @@ using System.IO;
 
 namespace PlayerLibrary.Structures.Songs
 {
-    class Local : Song
+    public class Local : Song
     {
         public override Stream Load()
         {
