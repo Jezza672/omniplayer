@@ -9,13 +9,15 @@ namespace PlayerLibrary.Structures.Songs
 {
     public class Local : Song
     {
-        /// <summary>
-        /// Loads the song
-        /// </summary>
-        public override Stream Load()
+        public Local(string url)
         {
-            using (StreamReader s = new StreamReader(Location))
-                return s.BaseStream;
+            Title = url;
+            Artist = "Artist";
+            Album = "Album";
+            TrackNumber = 0;
+            DiscNumber = 0;
+            Genre = "Genre";
+            Location = url;
         }
     }
 }

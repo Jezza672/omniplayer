@@ -42,9 +42,14 @@ namespace PlayerLibrary.Structures.Songs
         /// </summary>
         public string Location { get; set; }
 
+
         /// <summary>
-        /// Loads the song.
+        /// To String override, returns format: "$Artist - $Title"
         /// </summary>
-        public abstract Stream Load();
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return Artist + " - " + Title;
+        }
     }
 }
