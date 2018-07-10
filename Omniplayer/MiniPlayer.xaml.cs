@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PlayerLibrary.Player;
 
 namespace Omniplayer
 {
@@ -23,6 +24,11 @@ namespace Omniplayer
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            Player player = new Player();
         }
     }
 }
