@@ -44,6 +44,12 @@ namespace PlayerLibrary.Structures.Songs
 
 
         /// <summary>
+        /// The song's duration.
+        /// </summary>
+        public float Duration { get; set;}
+
+
+        /// <summary>
         /// To String override, returns format: "$Artist - $Title"
         /// </summary>
         /// <returns></returns>

@@ -17,6 +17,14 @@ namespace PlayerLibrary.Structures.Playlists
         /// </summary>
         public String Name { get; set; }
 
+
+        public float Duration {
+            get
+            {
+                return this.Sum(i => i.Duration);
+            }
+        }
+
         /// <summary>
         /// The thumbnail image of the playlist.
         /// </summary>

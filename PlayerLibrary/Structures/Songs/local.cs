@@ -17,6 +17,7 @@ namespace PlayerLibrary.Structures.Songs
             TrackNumber = 0;
             DiscNumber = 0;
             Genre = "Genre";
+            Duration = 1;
             Location = url;
         }
     }

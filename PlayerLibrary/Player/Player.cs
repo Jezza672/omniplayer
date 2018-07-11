@@ -13,30 +13,65 @@ namespace PlayerLibrary.Player
     public class Player
     {
 
-        private WindowsMediaPlayer WMPlayer;
+        private WindowsMediaPlayer WMPlayer = new WindowsMediaPlayer();
         private Playlist Queue;
         private int CurrentSong;
 
-        public enum PlayModes { Default, LoopSingle, LoopWhole};
-        public PlayModes PlayMode { get; set; }
+        /// <summary>
+        /// The possible loop modes.
+        /// </summary>
+        public enum LoopModes { None, Single, Whole};
+
+        /// <summary>
+        /// The LoopMode selected. by default it is "None".
+        /// </summary>
+        public LoopModes LoopMode { get; set; }
+
+
+        /// <summary>
+        /// The Current Position in seconds the player is into the current mdeia item.
+        /// </summary>
+        public double Position
+        {
+            get
+            {
+                return WMPlayer.controls.currentPosition;
+            }
+            set
+            {
+                if (value <= WMPlayer.currentMedia.duration && value >= 0)
+                {
+                    WMPlayer.controls.currentPosition = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The duration of the current loaded media item.
+        /// </summary>
+        public double Duration {
+            get
+            {
+                return WMPlayer.currentMedia.duration;
+            }
+        }
+
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public Player()
         {
-            WMPlayer = new WindowsMediaPlayer();
-            PlayMode = PlayModes.Default;
+            LoopMode = LoopModes.None;
             WMPlayer.PlayStateChange += new _WMPOCXEvents_PlayStateChangeEventHandler(Player_PlayStateChange);
             WMPlayer.MediaError += new _WMPOCXEvents_MediaErrorEventHandler(Player_MediaError);
-            
+            WMPlayer.settings.autoStart = false;
 
             Queue = Playlist.PlaylistFromFolder(Environment.CurrentDirectory + @"/Testfiles/Fake Me Up", "Queue");
             Console.WriteLine(Queue);
 
             CurrentSong = 0;
             WMPlayer.URL = Queue[CurrentSong].Location;
-            WMPlayer.controls.stop();
         }
 
         /// <summary>
@@ -94,8 +129,27 @@ namespace PlayerLibrary.Player
             Console.WriteLine(NewPlayState.ToString());
             if (NewPlayState == WMPPlayState.wmppsMediaEnded)
             {
-                Next();
-                Play();
+                switch (LoopMode)
+                {
+                    case LoopModes.Single:
+                        Play();
+                        break;
+                    case LoopModes.Whole:
+                        Next();
+                        Play();
+                        break;
+                    default:
+                        if (CurrentSong < Queue.Count - 1)
+                        {
+                            Next();
+                            Play();        
+                        }
+                        else
+                        {
+                            Stop();
+                        }
+                        break;
+                }
             }
         }
 
