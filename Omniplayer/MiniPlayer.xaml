@@ -8,37 +8,43 @@
         Title="MiniPlayer" SizeToContent="WidthAndHeight" Height="1080" Width="1920">
     <Grid Loaded="Grid_Loaded">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="10">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="LeftTimeCode" HorizontalAlignment="Left" Margin="10, 0, 0, 0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Bottom"   Grid.Column="0" FontSize="14" />
-                <Slider x:Name="Transport" Margin="5, 10, 5, 0" VerticalAlignment="Center" Grid.Column="1" Height="18"/>
-                <TextBlock x:Name="RightTimeCode" HorizontalAlignment="Right" TextWrapping="Wrap" Text="-00:00:00" VerticalAlignment="Center" Grid.Column="2" FontSize="14"/>
+                <TextBlock x:Name="LeftTimeCode"  TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center"   Grid.Column="0" FontSize="14" />
+                <Slider x:Name="Transport" Margin="10, 0" VerticalAlignment="Center" Grid.Column="1" AutoToolTipPlacement="BottomRight"/>
+                <TextBlock x:Name="RightTimeCode" TextWrapping="Wrap" Text="-00:00:00" VerticalAlignment="Center" Grid.Column="2" FontSize="14"/>
             </Grid>
-            <StackPanel Orientation="Horizontal">
-                <Button x:Name="PrevButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0">
-                    <Image Width="36" Source="./Resources/Icons/Controls/prev.png"/>
+            <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                <Button x:Name="PrevButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <Image Width="36" Source="./Resources/Icons/Controls/prev.png" ToolTip="Skip Backwards"/>
                 </Button>
-                <Button x:Name="PlayButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0">
-                    <Image Width="36" Source="./Resources/Icons/Controls/play.png"/>
+                <Button x:Name="PlayButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <Image Width="36" Source="./Resources/Icons/Controls/play.png" ToolTip="Play"/>
                 </Button>
-                <Button x:Name="NextButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0">
-                    <Image Width="36" Source="./Resources/Icons/Controls/next.png"/>
+                <Button x:Name="NextButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <Image Width="36" Source="./Resources/Icons/Controls/next.png" ToolTip="Skip Forwards"/>
                 </Button>
-                <Slider x:Name="Volume" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" Width="108" Value="7"/>
-                <TextBlock x:Name="NowplayingText" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0"
-                           TextWrapping="Wrap" Text="Now Playing: Artist - Song" FontSize="18" />
+                <Button x:Name="LoopModeButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <Image Width="36" Source="./Resources/Icons/Controls/repeat.png" ToolTip="Repeat"/>
+                </Button>
+                <Button x:Name="ShuffleButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <Image Width="36" Source="./Resources/Icons/Controls/shuffle.png" ToolTip="Shuffle"/>
+                </Button>
+                <Slider x:Name="Volume" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Width="108" Value="7" ToolTip="Volume"/>
+                <TextBlock x:Name="NowplayingText" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0"
+                           TextWrapping="Wrap" Text="Now Playing: Artist - Song" FontSize="18" ToolTip="Now Playing" />
             </StackPanel>
         </StackPanel>
         
