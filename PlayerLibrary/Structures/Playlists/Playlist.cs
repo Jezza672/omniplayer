@@ -63,7 +63,7 @@ namespace PlayerLibrary.Structures.Playlists
         /// <returns>Name and Songs contained</returns>
         public override string ToString()
         {
-            return "Playlist: " + Name + "  Songs: " + base.ToString();
+            return "Playlist: " + Name + "\nSongs: " + string.Join(Environment.NewLine + "       ", this.Select(x => x.ToString()));
         }
 
         /// <summary>
@@ -72,10 +72,21 @@ namespace PlayerLibrary.Structures.Playlists
         /// <param name="url">The url of the folder.</param>
         public void PopulateFromFolder(string url)
         {
-            string[] files = Directory.GetFiles(url);
-            foreach (string file in files)
+            foreach (string d in Directory.GetDirectories(url))
             {
-                Add(new Local(file));
+                PopulateFromFolder(d);
+            }
+
+            foreach (string f in Directory.GetFiles(url))
+            {
+                try
+                {
+                    Add(new Local(f));
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
     }

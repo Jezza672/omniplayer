@@ -13,11 +13,18 @@ namespace PlayerLibrary.Structures.Songs
     public class Local : Song
     {
         /// <summary>
+        /// Valid file extensions
+        /// </summary>
+        public static string[] ValidExtensions { get; set; } = { ".WAV", ".WMA", ".MP3", ".OGG" };
+
+        /// <summary>
         /// Initializes a new instance of the Local class.
         /// </summary>
         /// <param name="url">Url to the file.</param>
         public Local(string url)
         {
+            if (!IsValidFile(url))
+                throw new IOException("File not supported");
             Title = url;
             Artist = "Artist";
             Album = "Album";
@@ -26,6 +33,17 @@ namespace PlayerLibrary.Structures.Songs
             Genre = "Genre";
             Duration = 1;
             Location = url;
+        }
+
+        /// <summary>
+        /// Check if a file is a media file accepted by this program.
+        /// </summary>
+        /// <param name="path">The path of the file checked</param>
+        /// <returns>Boolean if valid</returns>
+        public static bool IsValidFile(string path)
+        {
+            ////Console.WriteLine(Path.GetExtension(path).ToUpperInvariant());
+            return -1 != Array.IndexOf(ValidExtensions, Path.GetExtension(path).ToUpperInvariant());
         }
     }
 }

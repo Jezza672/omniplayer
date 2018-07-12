@@ -151,11 +151,14 @@ namespace PlayerLibrary.Player
         /// </summary>
         public void Next()
         {
-            var playing = (wmplayer.playState == WMPPlayState.wmppsPlaying);
+            var playing = wmplayer.playState == WMPPlayState.wmppsPlaying;
             currentSong = (currentSong > queue.Count - 2) ? 0 : currentSong + 1;
             wmplayer.URL = queue[currentSong].Location;
             if (playing)
+            {
                 Play();
+            }
+
             Console.WriteLine("Selecting song number {0}, {1}", currentSong, queue[currentSong].ToString());
         }
 
