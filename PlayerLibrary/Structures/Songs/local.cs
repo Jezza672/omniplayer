@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace PlayerLibrary.Structures.Songs
 {
+    /// <summary>
+    /// The local song class. Inherits Song.
+    /// </summary>
     public class Local : Song
     {
+        /// <summary>
+        /// Initializes a new instance of the Local class.
+        /// </summary>
+        /// <param name="url">Url to the file.</param>
         public Local(string url)
         {
             Title = url;

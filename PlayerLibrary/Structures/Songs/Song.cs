@@ -8,51 +8,49 @@ namespace PlayerLibrary.Structures.Songs
     public abstract class Song
     {
         /// <summary>
-        /// The song's title.
+        /// Gets or sets the song's title.
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// The song's artist.
+        /// Gets or sets the song's artist.
         /// </summary>
         public string Artist { get; set; }
-        
+
         /// <summary>
-        /// The album the song belongs to.
+        /// Gets or sets the album the song belongs to.
         /// </summary>
         public string Album { get; set; }
 
         /// <summary>
-        /// Where the track appears in the album.
+        /// Gets or sets where the track appears in the album.
         /// </summary>
         public int TrackNumber { get; set; }
 
         /// <summary>
-        /// Which disc the track is on in the album.
+        /// Gets or sets which disc the track is on in the album.
         /// </summary>
         public int DiscNumber { get; set; }
 
         /// <summary>
-        /// The song's genre.
+        /// Gets or sets the song's genre.
         /// </summary>
         public string Genre { get; set; }
 
         /// <summary>
-        /// The location the song is stored at.
+        /// Gets or sets the location the song is stored at.
         /// </summary>
         public string Location { get; set; }
 
+        /// <summary>
+        /// Gets or sets the song's duration.
+        /// </summary>
+        public float Duration { get; set; }
 
         /// <summary>
-        /// The song's duration.
+        /// ToString override
         /// </summary>
-        public float Duration { get; set;}
-
-
-        /// <summary>
-        /// To String override, returns format: "$Artist - $Title"
-        /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns format: "$Artist - $Title"</returns>
         public override string ToString()
         {
             return Artist + " - " + Title;

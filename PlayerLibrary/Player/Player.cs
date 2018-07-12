@@ -3,75 +3,123 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Media;
-using WMPLib;
 using PlayerLibrary.Structures.Playlists;
 using PlayerLibrary.Structures.Songs;
+using WMPLib;
 
 namespace PlayerLibrary.Player
 {
+    /// <summary>
+    /// The Player Class.
+    /// </summary>
     public class Player
     {
-
-        private WindowsMediaPlayer WMPlayer = new WindowsMediaPlayer();
-        private Playlist Queue;
-        private int CurrentSong;
-
         /// <summary>
-        /// The possible loop modes.
+        /// The Windows Media Player instance.
         /// </summary>
-        public enum LoopModes { None, Single, Whole};
+        private WindowsMediaPlayer wmplayer = new WindowsMediaPlayer();
 
         /// <summary>
-        /// The LoopMode selected. by default it is "None".
+        /// The Queue.
+        /// </summary>
+        private Playlist queue;
+
+        /// <summary>
+        /// The index of the current track being played.
+        /// </summary>
+        private int currentSong;
+
+        /// <summary>
+        /// Types of loop modes.
+        /// </summary>
+        public enum LoopModes
+        {
+            /// <summary>
+            /// No looping.
+            /// </summary>
+            None,
+
+            /// <summary>
+            /// Loop the track currently playing.
+            /// </summary>
+            Single,
+
+            /// <summary>
+            /// Loop the whole queue. Default
+            /// </summary>
+            Whole
+        }
+
+        /// <summary>
+        /// Gets or sets the playback looping mode.
         /// </summary>
         public LoopModes LoopMode { get; set; }
 
-
         /// <summary>
-        /// The Current Position in seconds the player is into the current mdeia item.
+        /// Gets or sets the current position in seconds the player is into the current media item.
         /// </summary>
         public double Position
         {
             get
             {
-                return WMPlayer.controls.currentPosition;
+                return wmplayer.controls.currentPosition;
             }
+
             set
             {
-                if (value <= WMPlayer.currentMedia.duration && value >= 0)
-                {
-                    WMPlayer.controls.currentPosition = value;
-                }
+                var temp = value;
+                temp = (temp < 0) ? 0 : temp;
+                temp = (temp > wmplayer.currentMedia.duration) ? wmplayer.currentMedia.duration : temp;
+                wmplayer.controls.currentPosition = temp;
             }
         }
 
         /// <summary>
-        /// The duration of the current loaded media item.
+        /// Gets the duration of the current loaded media item.
         /// </summary>
-        public double Duration {
+        public double Duration
+        {
             get
             {
-                return WMPlayer.currentMedia.duration;
+                return wmplayer.currentMedia.duration;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the volume of the playback, between 0 and 100.
+        /// </summary>
+        public int Volume
+        {
+            get
+            {
+                return wmplayer.settings.volume;
+            }
+
+            set
+            {
+                var temp = value;
+                temp = (temp < 0) ? 0 : temp;
+                temp = (temp > 100) ? 100 : temp;
+                wmplayer.settings.volume = temp;
+            }
+        }
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the Player class.
         /// </summary>
         public Player()
         {
-            LoopMode = LoopModes.None;
-            WMPlayer.PlayStateChange += new _WMPOCXEvents_PlayStateChangeEventHandler(Player_PlayStateChange);
-            WMPlayer.MediaError += new _WMPOCXEvents_MediaErrorEventHandler(Player_MediaError);
-            WMPlayer.settings.autoStart = false;
+            LoopMode = LoopModes.Whole;
+            wmplayer.PlayStateChange += new _WMPOCXEvents_PlayStateChangeEventHandler(Player_PlayStateChange);
+            wmplayer.MediaError += new _WMPOCXEvents_MediaErrorEventHandler(Player_MediaError);
+            wmplayer.settings.autoStart = false;
+            wmplayer.settings.volume = 30;
 
-            Queue = Playlist.PlaylistFromFolder(Environment.CurrentDirectory + @"/Testfiles/Fake Me Up", "Queue");
-            Console.WriteLine(Queue);
+            queue = Playlist.PlaylistFromFolder(Environment.CurrentDirectory + @"/Testfiles/Fake Me Up", "Queue");
+            Console.WriteLine(queue);
 
-            CurrentSong = 0;
-            WMPlayer.URL = Queue[CurrentSong].Location;
+            currentSong = 0;
+            wmplayer.URL = queue[currentSong].Location;
         }
 
         /// <summary>
@@ -79,34 +127,36 @@ namespace PlayerLibrary.Player
         /// </summary>
         public void Play()
         {
-            WMPlayer.controls.play();
+            wmplayer.controls.play();
         }
 
         /// <summary>
-        /// Pauses playback of the current queue.
+        /// Pauses playback of the queue.
         /// </summary>
         public void Pause()
         {
-            WMPlayer.controls.pause();
+            wmplayer.controls.pause();
         }
 
         /// <summary>
-        /// Stops playback of the current queue.
+        /// Stops playback of the queue.
         /// </summary>
         public void Stop()
         {
-            WMPlayer.controls.stop();
+            wmplayer.controls.stop();
         }
 
         /// <summary>
-        /// Skips to the next song n the queue.
+        /// Skips to the next song in the queue.
         /// </summary>
         public void Next()
         {
-            CurrentSong = (CurrentSong > Queue.Count - 2) ? 0 : CurrentSong + 1;
-            WMPlayer.URL = Queue[CurrentSong].Location;
-            Console.WriteLine("Playing song number {0}, {1}", CurrentSong, Queue[CurrentSong].ToString());
-
+            var playing = (wmplayer.playState == WMPPlayState.wmppsPlaying);
+            currentSong = (currentSong > queue.Count - 2) ? 0 : currentSong + 1;
+            wmplayer.URL = queue[currentSong].Location;
+            if (playing)
+                Play();
+            Console.WriteLine("Selecting song number {0}, {1}", currentSong, queue[currentSong].ToString());
         }
 
         /// <summary>
@@ -114,20 +164,20 @@ namespace PlayerLibrary.Player
         /// </summary>
         public void Prev()
         {
-            CurrentSong = (CurrentSong < 1) ? Queue.Count - 1 : CurrentSong - 1;
-            WMPlayer.URL = Queue[CurrentSong].Location;
-            Console.WriteLine("Playing song number {0}, {1}", CurrentSong, Queue[CurrentSong].ToString());
+            currentSong = (currentSong < 1) ? queue.Count - 1 : currentSong - 1;
+            wmplayer.URL = queue[currentSong].Location;
+            Console.WriteLine("Selecting song number {0}, {1}", currentSong, queue[currentSong].ToString());
         }
 
         /// <summary>
         /// Event handler for when the state of the player changes.
         /// </summary>
-        /// <param name="NewState">The new state, using the WMPPlayState Enum</param>
-        private void Player_PlayStateChange(int NewState)
+        /// <param name="newState">The new state, using the WMPPlayState Enum</param>
+        private void Player_PlayStateChange(int newState)
         {
-            var NewPlayState = (WMPPlayState)NewState;
-            Console.WriteLine(NewPlayState.ToString());
-            if (NewPlayState == WMPPlayState.wmppsMediaEnded)
+            var newPlayState = (WMPPlayState)newState;
+            Console.WriteLine(newPlayState.ToString());
+            if (newPlayState == WMPPlayState.wmppsMediaEnded)
             {
                 switch (LoopMode)
                 {
@@ -138,8 +188,9 @@ namespace PlayerLibrary.Player
                         Next();
                         Play();
                         break;
+                    case LoopModes.None:
                     default:
-                        if (CurrentSong < Queue.Count - 1)
+                        if (currentSong < queue.Count - 1)
                         {
                             Next();
                             Play();        
@@ -148,6 +199,7 @@ namespace PlayerLibrary.Player
                         {
                             Stop();
                         }
+
                         break;
                 }
             }
@@ -156,8 +208,8 @@ namespace PlayerLibrary.Player
         /// <summary>
         /// Event handler for when the player encounters a media error
         /// </summary>
-        /// <param name="pMediaObject"> not a clue</param>
-        private void Player_MediaError(object pMediaObject)
+        /// <param name="mediaObject"> not a clue</param>
+        private void Player_MediaError(object mediaObject)
         {
             Console.WriteLine("Media either doesn't exist or cannot be played");
         }
