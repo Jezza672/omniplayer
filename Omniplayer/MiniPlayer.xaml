@@ -6,16 +6,35 @@
         xmlns:local="clr-namespace:Omniplayer"
         mc:Ignorable="d"
         Title="MiniPlayer" SizeToContent="WidthAndHeight" Height="1080" Width="1920">
+    
     <Grid Loaded="Grid_Loaded">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="10">
+        <Menu Grid.ColumnSpan="2">
+            <MenuItem Header="_File">
+                <MenuItem Header="Imp_ort" InputGestureText="Ctrl+O" />
+            </MenuItem>
+            <MenuItem Header="Playback">
+                <MenuItem Header="Loop Mode">
+                    <MenuItem Header="None" IsCheckable="True"/>
+                    <MenuItem Header="Whole Queue" IsCheckable="True" IsChecked="True"/>
+                    <MenuItem Header="Single Song" IsCheckable="True"/>
+                </MenuItem>
+                <MenuItem Header="Shuffle Mode">
+                    <MenuItem Header="Type1" IsCheckable="True" IsChecked="True"/>
+                    <MenuItem Header="Type2" IsCheckable="True"/>
+                    <MenuItem Header="Type3" IsCheckable="True"/>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="10">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -47,6 +66,6 @@
                            TextWrapping="Wrap" Text="Now Playing: Artist - Song" FontSize="18" ToolTip="Now Playing" />
             </StackPanel>
         </StackPanel>
-        
+
     </Grid>
 </Window>
