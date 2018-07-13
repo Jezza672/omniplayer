@@ -30,6 +30,22 @@ namespace PlayerLibrary.Player
         private int currentSong;
 
         /// <summary>
+        /// Whether a song is currently being played or not.
+        /// </summary>
+        private bool playing;
+
+        /// <summary>
+        /// Gets whether the player is currently playing a song.
+        /// </summary>
+        public bool Playing
+        {
+            get
+            {
+                return playing;
+            }
+        }
+
+        /// <summary>
         /// Types of loop modes.
         /// </summary>
         public enum LoopModes
@@ -101,6 +117,7 @@ namespace PlayerLibrary.Player
                 temp = (temp < 0) ? 0 : temp;
                 temp = (temp > 100) ? 100 : temp;
                 wmplayer.settings.volume = temp;
+                Console.WriteLine(temp);
             }
         }
 
@@ -128,6 +145,7 @@ namespace PlayerLibrary.Player
         public void Play()
         {
             wmplayer.controls.play();
+            playing = true;
         }
 
         /// <summary>
@@ -136,6 +154,7 @@ namespace PlayerLibrary.Player
         public void Pause()
         {
             wmplayer.controls.pause();
+            playing = false;
         }
 
         /// <summary>
@@ -144,6 +163,7 @@ namespace PlayerLibrary.Player
         public void Stop()
         {
             wmplayer.controls.stop();
+            playing = false;
         }
 
         /// <summary>
@@ -151,7 +171,7 @@ namespace PlayerLibrary.Player
         /// </summary>
         public void Next()
         {
-            var playing = wmplayer.playState == WMPPlayState.wmppsPlaying;
+            Console.WriteLine("Current: " + playing.ToString());
             currentSong = (currentSong > queue.Count - 2) ? 0 : currentSong + 1;
             wmplayer.URL = queue[currentSong].Location;
             if (playing)
@@ -167,8 +187,14 @@ namespace PlayerLibrary.Player
         /// </summary>
         public void Prev()
         {
+            Console.WriteLine("Current: " + playing.ToString());
             currentSong = (currentSong < 1) ? queue.Count - 1 : currentSong - 1;
             wmplayer.URL = queue[currentSong].Location;
+            if (playing)
+            {
+                Play();
+            }
+
             Console.WriteLine("Selecting song number {0}, {1}", currentSong, queue[currentSong].ToString());
         }
 
@@ -179,7 +205,7 @@ namespace PlayerLibrary.Player
         private void Player_PlayStateChange(int newState)
         {
             var newPlayState = (WMPPlayState)newState;
-            Console.WriteLine(newPlayState.ToString());
+            Console.WriteLine("State Change: " + newPlayState.ToString());
             if (newPlayState == WMPPlayState.wmppsMediaEnded)
             {
                 switch (LoopMode)
