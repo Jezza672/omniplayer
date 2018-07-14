@@ -21,39 +21,70 @@ namespace Omniplayer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Player Player;
+        private Player Player = new Player();
+        private bool muted = false;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        private void PrevButton_Click(object sender, RoutedEventArgs e)
         {
-            Player = new Player();
+            Player.Prev();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
         {
-            Player.Play();
+            var image = (Image)PlayPauseButton.Content;
+            if (!Player.Playing)
+            {              
+                Player.Play();
+                image.Source = new BitmapImage(new Uri("Resources/Icons/Controls/pause.png", UriKind.Relative));
+            }
+            else
+            {
+                Player.Pause();
+                image.Source = new BitmapImage(new Uri("Resources/Icons/Controls/play.png", UriKind.Relative));
+            }
+            
         }
 
-
-        
-
-        private void button_Copy_Click(object sender, RoutedEventArgs e)
-        {
-            Player.Pause();
-        }
-
-        private void button_Copy1_Click(object sender, RoutedEventArgs e)
+        private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             Player.Next();
         }
 
-        private void button_Copy2_Click(object sender, RoutedEventArgs e)
+        private void Volume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Player.Prev();
+            if (!muted)
+            {
+                int vol = (int)(Volume.Value * Volume.Value * (100.0 / 121.0));
+                if (vol < 1 && Volume.Value != 0)
+                    vol = 1;
+                Player.Volume = vol;
+            }
+        }
+
+        private void VolumeText_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (muted)
+            {
+                Binding b = new Binding();
+                b.Path = new PropertyPath("Value");
+                b.ElementName = "Volume";
+                b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                b.StringFormat = "00";
+                VolumeText.SetBinding(TextBlock.TextProperty, b);
+                muted = false;
+                Volume_ValueChanged(sender, new RoutedPropertyChangedEventArgs<double>(12, 13));
+            }
+            else
+            {
+                VolumeText.Text = "🔇";
+                muted = true;
+                Player.Volume = 0;
+            }
         }
     }
 }
