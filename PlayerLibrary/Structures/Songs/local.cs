@@ -25,7 +25,7 @@ namespace PlayerLibrary.Structures.Songs
         {
             if (!IsValidFile(url))
                 throw new IOException("File not supported");
-            Title = url;
+            Title = Path.GetFileName(url);
             Artist = "Artist";
             Album = "Album";
             TrackNumber = 0;

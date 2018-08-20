@@ -51,7 +51,7 @@ namespace PlayerLibrary.Structures.Songs
         /// <summary>
         /// Gets or sets the song's duration.
         /// </summary>
-        public float Duration { get; set; }
+        public double Duration { get; set; }
 
         /// <summary>
         /// ToString override

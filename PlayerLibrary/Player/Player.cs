@@ -22,7 +22,7 @@ namespace PlayerLibrary.Player
         /// <summary>
         /// The Queue.
         /// </summary>
-        private Playlist queue;
+        public Playlist Queue { get; set; }
 
         /// <summary>
         /// The index of the current track being played.
@@ -132,11 +132,11 @@ namespace PlayerLibrary.Player
             wmplayer.settings.autoStart = false;
             wmplayer.settings.volume = 30;
 
-            queue = Playlist.PlaylistFromFolder(Environment.CurrentDirectory + @"/Testfiles/Fake Me Up", "Queue");
-            Console.WriteLine(queue);
+            Queue = Playlist.PlaylistFromFolder(Environment.CurrentDirectory + @"/Testfiles/Fake Me Up", "Queue");
+            Console.WriteLine(Queue);
 
             currentSong = 0;
-            wmplayer.URL = queue[currentSong].Location;
+            wmplayer.URL = Queue[currentSong].Location;
         }
 
         /// <summary>
@@ -172,14 +172,14 @@ namespace PlayerLibrary.Player
         public void Next()
         {
             Console.WriteLine("Current: " + playing.ToString());
-            currentSong = (currentSong > queue.Count - 2) ? 0 : currentSong + 1;
-            wmplayer.URL = queue[currentSong].Location;
+            currentSong = (currentSong > Queue.Count - 2) ? 0 : currentSong + 1;
+            wmplayer.URL = Queue[currentSong].Location;
             if (playing)
             {
                 Play();
             }
 
-            Console.WriteLine("Selecting song number {0}, {1}", currentSong, queue[currentSong].ToString());
+            Console.WriteLine("Selecting song number {0}, {1}", currentSong, Queue[currentSong].ToString());
         }
 
         /// <summary>
@@ -188,14 +188,14 @@ namespace PlayerLibrary.Player
         public void Prev()
         {
             Console.WriteLine("Current: " + playing.ToString());
-            currentSong = (currentSong < 1) ? queue.Count - 1 : currentSong - 1;
-            wmplayer.URL = queue[currentSong].Location;
+            currentSong = (currentSong < 1) ? Queue.Count - 1 : currentSong - 1;
+            wmplayer.URL = Queue[currentSong].Location;
             if (playing)
             {
                 Play();
             }
 
-            Console.WriteLine("Selecting song number {0}, {1}", currentSong, queue[currentSong].ToString());
+            Console.WriteLine("Selecting song number {0}, {1}", currentSong, Queue[currentSong].ToString());
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace PlayerLibrary.Player
                         break;
                     case LoopModes.None:
                     default:
-                        if (currentSong < queue.Count - 1)
+                        if (currentSong < Queue.Count - 1)
                         {
                             Next();
                             Play();        

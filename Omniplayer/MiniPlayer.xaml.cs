@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PlayerLibrary.Player;
+using System.Windows.Threading;
 
 namespace Omniplayer
 {
@@ -23,10 +25,28 @@ namespace Omniplayer
     {
         private Player Player = new Player();
         private bool muted = false;
+        DispatcherTimer timer = new DispatcherTimer();
 
         public MainWindow()
         {
             InitializeComponent();
+
+            PlaylistViewer.ItemsSource = Player.Queue;
+            
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            timer.Tick += new EventHandler(timer_Tick);
+            timer.Start(); 
+        }
+
+        void timer_Tick(object sender, EventArgs e)
+        {
+            Transport.Value = Player.Position;
+            LeftTimeCode.Text = doubleToHMS(Player.Position);
+            RightTimeCode.Text = doubleToHMS(Player.Position - Player.Duration);
         }
 
         private void PrevButton_Click(object sender, RoutedEventArgs e)
@@ -85,6 +105,47 @@ namespace Omniplayer
                 muted = true;
                 Player.Volume = 0;
             }
+        }  
+        
+        private void PlaylistViewer_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString("00");
+        }
+
+        private void DataGridRow_Selected(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private string doubleToHMS(double time)
+        {
+            bool negative = false;
+            if (time < 0)
+            {
+                negative = true;
+                time = -time;
+            }
+            int hours = (int)(time / 3600);
+            int minutes = (int)(time / 60) % 60;
+            int seconds = (int)time % 60;
+            return (negative ? "-" : "") + hours.ToString("D2") + ":" + minutes.ToString("D2") + ":" + seconds.ToString("D2");
+        }
+    }
+
+    public class DurationSecondsToFormattedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            TimeSpan t = TimeSpan.FromSeconds((double)value);
+            return t.ToString(@"mm\:ss");
+        }
+
+        public object ConvertBack(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            // Do the conversion from visibility to bool
+            return 12.0;
         }
     }
 }

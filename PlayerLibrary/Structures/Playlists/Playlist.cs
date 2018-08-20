@@ -22,7 +22,7 @@ namespace PlayerLibrary.Structures.Playlists
         /// <summary>
         /// Gets the duration of the playlist.
         /// </summary>
-        public float Duration
+        public double Duration
         {
             get
             {
