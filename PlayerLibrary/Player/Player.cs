@@ -121,6 +121,8 @@ namespace PlayerLibrary.Player
             }
         }
 
+        public EventHandler<PlayEventArgs> RaisePlayEvent;
+
         /// <summary>
         /// Initializes a new instance of the Player class.
         /// </summary>
@@ -139,13 +141,18 @@ namespace PlayerLibrary.Player
             wmplayer.URL = Queue[currentSong].Location;
         }
 
+        private void OnRaisedPlayEvent()
+        {
+            RaisePlayEvent?.Invoke(this, new PlayEventArgs(Duration, Position));
+        }
+
         /// <summary>
         /// Resumes playback of the queue.
         /// </summary>
         public void Play()
         {
             wmplayer.controls.play();
-            playing = true;
+            playing = true;         
         }
 
         /// <summary>
@@ -189,7 +196,7 @@ namespace PlayerLibrary.Player
         {
             Console.WriteLine("Current: " + playing.ToString());
             currentSong = (currentSong < 1) ? Queue.Count - 1 : currentSong - 1;
-            wmplayer.URL = Queue[currentSong].Location;
+            wmplayer.URL = Queue[currentSong].Location;         
             if (playing)
             {
                 Play();
@@ -206,31 +213,35 @@ namespace PlayerLibrary.Player
         {
             var newPlayState = (WMPPlayState)newState;
             Console.WriteLine("State Change: " + newPlayState.ToString());
-            if (newPlayState == WMPPlayState.wmppsMediaEnded)
+            switch (newPlayState)
             {
-                switch (LoopMode)
-                {
-                    case LoopModes.Single:
-                        Play();
-                        break;
-                    case LoopModes.Whole:
-                        Next();
-                        Play();
-                        break;
-                    case LoopModes.None:
-                    default:
-                        if (currentSong < Queue.Count - 1)
-                        {
+                case WMPPlayState.wmppsMediaEnded:
+                    switch (LoopMode)
+                    {
+                        case LoopModes.Single:
+                            Play();
+                            break;
+                        case LoopModes.Whole:
                             Next();
-                            Play();        
-                        }
-                        else
-                        {
-                            Stop();
-                        }
-
-                        break;
-                }
+                            Play();
+                            break;
+                        case LoopModes.None:
+                        default:
+                            if (currentSong < Queue.Count - 1)
+                            {
+                                Next();
+                                Play();
+                            }
+                            else
+                            {
+                                Stop();
+                            }
+                            break;
+                    }
+                    break;
+                case WMPPlayState.wmppsTransitioning:
+                    OnRaisedPlayEvent();
+                    break;    
             }
         }
 

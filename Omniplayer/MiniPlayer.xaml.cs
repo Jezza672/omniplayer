@@ -32,6 +32,7 @@ namespace Omniplayer
             InitializeComponent();
 
             PlaylistViewer.ItemsSource = Player.Queue;
+            Player.RaisePlayEvent += Song_Change;
             
         }
 
@@ -47,6 +48,12 @@ namespace Omniplayer
             Transport.Value = Player.Position;
             LeftTimeCode.Text = doubleToHMS(Player.Position);
             RightTimeCode.Text = doubleToHMS(Player.Position - Player.Duration);
+        }
+
+        void Song_Change(object sender, PlayEventArgs e)
+        {
+            Transport.Maximum = e.Duration;
+            Transport.Value = e.Position;
         }
 
         private void PrevButton_Click(object sender, RoutedEventArgs e)
