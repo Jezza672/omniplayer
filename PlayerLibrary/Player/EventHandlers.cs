@@ -8,12 +8,10 @@ namespace PlayerLibrary.Player
 {
     public class PlayEventArgs : EventArgs
     {
-        public PlayEventArgs(double duration, double position)
+        public PlayEventArgs(double duration)
         {
             Duration = duration;
-            Position = position;
         }
         public double Duration { get; set; }
-        public double Position { get; set; }
     }
 }

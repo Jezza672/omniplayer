@@ -53,7 +53,6 @@ namespace Omniplayer
         void Song_Change(object sender, PlayEventArgs e)
         {
             Transport.Maximum = e.Duration;
-            Transport.Value = e.Position;
         }
 
         private void PrevButton_Click(object sender, RoutedEventArgs e)

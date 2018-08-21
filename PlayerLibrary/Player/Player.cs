@@ -143,7 +143,7 @@ namespace PlayerLibrary.Player
 
         private void OnRaisedPlayEvent()
         {
-            RaisePlayEvent?.Invoke(this, new PlayEventArgs(Duration, Position));
+            RaisePlayEvent?.Invoke(this, new PlayEventArgs(Duration));
         }
 
         /// <summary>
@@ -239,7 +239,8 @@ namespace PlayerLibrary.Player
                             break;
                     }
                     break;
-                case WMPPlayState.wmppsTransitioning:
+                case WMPPlayState.wmppsPlaying:
+                case WMPPlayState.wmppsPaused:
                     OnRaisedPlayEvent();
                     break;    
             }
