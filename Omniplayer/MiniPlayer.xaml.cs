@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PlayerLibrary.Player;
+using PlayerLibrary.Structures.Songs;
 using System.Windows.Threading;
 
 namespace Omniplayer
@@ -53,6 +54,7 @@ namespace Omniplayer
         void Song_Change(object sender, PlayEventArgs e)
         {
             Transport.Maximum = e.Duration;
+            NowplayingText.Text = "Now Playing: " + e.Song.ToString();
         }
 
         private void PrevButton_Click(object sender, RoutedEventArgs e)
@@ -136,6 +138,16 @@ namespace Omniplayer
             int seconds = (int)time % 60;
             return (negative ? "-" : "") + hours.ToString("D2") + ":" + minutes.ToString("D2") + ":" + seconds.ToString("D2");
         }
+
+        private void PlaylistViewer_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGridRow row = sender as DataGridRow;
+            Console.WriteLine(row.DataContext);
+            Player.PlaySong((Song)row.DataContext);
+
+            var image = (Image)PlayPauseButton.Content;
+            image.Source = new BitmapImage(new Uri("Resources/Icons/Controls/pause.png", UriKind.Relative));
+        }
     }
 
     public class DurationSecondsToFormattedConverter : IValueConverter
@@ -150,7 +162,6 @@ namespace Omniplayer
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
-            // Do the conversion from visibility to bool
             return 12.0;
         }
     }

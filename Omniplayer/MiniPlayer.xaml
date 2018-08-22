@@ -40,7 +40,13 @@
         </Menu>
         <GridSplitter Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"/>
         <Grid Grid.Column="2" Grid.Row="1">
-            <DataGrid Name="PlaylistViewer" AutoGenerateColumns="False" LoadingRow="PlaylistViewer_LoadingRow" CanUserResizeRows="False" CanUserSortColumns="False">
+            <DataGrid x:Name="PlaylistViewer" AutoGenerateColumns="False" LoadingRow="PlaylistViewer_LoadingRow" CanUserResizeRows="False" 
+                      CanUserSortColumns="False" IsReadOnly="True" SelectionUnit="FullRow">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="MouseDoubleClick" Handler="PlaylistViewer_MouseDoubleClick"/>
+                    </Style>
+                </DataGrid.Resources>
                 <DataGrid.BorderBrush>
                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
                 </DataGrid.BorderBrush>
@@ -54,9 +60,9 @@
                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlTextColorKey}}"/>
                 </DataGrid.Foreground>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" MinWidth="200"/>
-                    <DataGridTextColumn Header="Album" Binding="{Binding Album}" MinWidth="200"/>
-                    <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" MinWidth="200"/>
+                    <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
+                    <DataGridTextColumn Header="Album" Binding="{Binding Album}"/>
+                    <DataGridTextColumn Header="Artist" Binding="{Binding Artist}"/>
                     <DataGridTextColumn Header="Duration" Binding="{Binding Duration, Converter={StaticResource DurationSecondsToFormattedConverter}}" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
@@ -110,7 +116,7 @@
                         </TextBlock.Foreground>
                     </TextBlock>
                     <TextBlock x:Name="NowplayingText" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                           TextWrapping="Wrap" Text="Now Playing: Artist - Song" FontSize="18" ToolTip="Now Playing" />
+                           TextWrapping="Wrap" Text="No Song Loaded" FontSize="18" ToolTip="Now Playing" />
                 </StackPanel>
             </StackPanel>
         </Border>

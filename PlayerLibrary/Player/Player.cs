@@ -143,7 +143,7 @@ namespace PlayerLibrary.Player
 
         private void OnRaisedPlayEvent()
         {
-            RaisePlayEvent?.Invoke(this, new PlayEventArgs(Duration));
+            RaisePlayEvent?.Invoke(this, new PlayEventArgs(Duration, Queue[currentSong]));
         }
 
         /// <summary>
@@ -202,6 +202,14 @@ namespace PlayerLibrary.Player
                 Play();
             }
 
+            Console.WriteLine("Selecting song number {0}, {1}", currentSong, Queue[currentSong].ToString());
+        }
+
+        public void PlaySong(Song song)
+        {
+            currentSong = Queue.IndexOf(song);
+            wmplayer.URL = Queue[currentSong].Location;
+            Play();
             Console.WriteLine("Selecting song number {0}, {1}", currentSong, Queue[currentSong].ToString());
         }
 
