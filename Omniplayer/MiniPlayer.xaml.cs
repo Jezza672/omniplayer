@@ -148,6 +148,11 @@ namespace Omniplayer
             var image = (Image)PlayPauseButton.Content;
             image.Source = new BitmapImage(new Uri("Resources/Icons/Controls/pause.png", UriKind.Relative));
         }
+
+        private void PlayListAddButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
     public class DurationSecondsToFormattedConverter : IValueConverter
