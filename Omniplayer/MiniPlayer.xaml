@@ -38,6 +38,20 @@
                 </MenuItem>
             </MenuItem>
         </Menu>
+        <TabControl x:Name="LeftPane" Grid.Row="1">
+            <TabItem Header="Files">
+                <TreeView x:Name="FileSelection">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}">
+                            <EventSetter Event="MouseDoubleClick" Handler="TreeViewItem_MouseDoubleClick"></EventSetter>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                </TreeView>
+            </TabItem>
+            <TabItem Header="Playlists">
+                
+            </TabItem>
+        </TabControl>
         <GridSplitter Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"/>
         <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Vertical">
             <DockPanel Margin="5" LastChildFill="False">
@@ -85,7 +99,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock x:Name="LeftTimeCode"  TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center"   Grid.Column="0" FontSize="14" />
-                    <Slider x:Name="Transport" Margin="10, 0" VerticalAlignment="Center" Grid.Column="1" Background="{x:Null}" TickFrequency="15">
+                    <Slider x:Name="Transport" Margin="10, 0" VerticalAlignment="Center" Grid.Column="1" Background="{x:Null}" TickFrequency="15" Thumb.DragStarted="Transport_DragStarted" Thumb.DragCompleted="Transport_DragCompleted">
                         <Slider.Foreground>
                             <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
                         </Slider.Foreground>
