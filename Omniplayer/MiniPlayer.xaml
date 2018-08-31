@@ -4,9 +4,151 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Omniplayer"
+        xmlns:l="clr-namespace:Omniplayer"
         mc:Ignorable="d"
-        Title="MiniPlayer" Height="350" Width="525">
+        Title="MiniPlayer" SizeToContent="WidthAndHeight" Height="1080" Width="1920" Loaded="Window_Loaded">
+    <Window.Resources>
+        <l:DurationSecondsToFormattedConverter x:Key="DurationSecondsToFormattedConverter" />
+    </Window.Resources>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Grid.ColumnSpan="3">
+            <MenuItem Header="_File">
+                <MenuItem Header="Imp_ort" InputGestureText="Ctrl+O" />
+            </MenuItem>
+            <MenuItem Header="Playback">
+                <MenuItem Header="Loop Mode">
+                    <MenuItem Header="None" IsCheckable="True"/>
+                    <MenuItem Header="Whole Queue" IsCheckable="True" IsChecked="True"/>
+                    <MenuItem Header="Single Song" IsCheckable="True"/>
+                </MenuItem>
+                <MenuItem Header="Shuffle Mode">
+                    <MenuItem Header="Type1" IsCheckable="True" IsChecked="True"/>
+                    <MenuItem Header="Type2" IsCheckable="True"/>
+                    <MenuItem Header="Type3" IsCheckable="True"/>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <TabControl x:Name="LeftPane" Grid.Row="1">
+            <TabItem Header="Files">
+                <TreeView x:Name="FileSelection">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}">
+                            <EventSetter Event="MouseDoubleClick" Handler="TreeViewItem_MouseDoubleClick"></EventSetter>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                </TreeView>
+            </TabItem>
+            <TabItem Header="Playlists">
+                
+            </TabItem>
+        </TabControl>
+        <GridSplitter Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"/>
+        <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Vertical">
+            <DockPanel Margin="5" LastChildFill="False">
+                <TextBlock DockPanel.Dock="Left" Name="PlaylistName" Text="Queue" FontSize="20"/>
+                <Button DockPanel.Dock="Right" Name="PlayListAddButton" Width="104" Click="PlayListAddButton_Click">
+                    <TextBlock Text="Add to Playlist"/>
+                </Button>
+            </DockPanel>
+            <DataGrid x:Name="PlaylistViewer" AutoGenerateColumns="False" LoadingRow="PlaylistViewer_LoadingRow" CanUserResizeRows="False" 
+                      CanUserSortColumns="False" IsReadOnly="True" SelectionUnit="FullRow">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="MouseDoubleClick" Handler="PlaylistViewer_MouseDoubleClick"/>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.BorderBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                </DataGrid.BorderBrush>
+                <DataGrid.VerticalGridLinesBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                </DataGrid.VerticalGridLinesBrush>
+                <DataGrid.HorizontalGridLinesBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                </DataGrid.HorizontalGridLinesBrush>
+                <DataGrid.Foreground>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlTextColorKey}}"/>
+                </DataGrid.Foreground>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
+                    <DataGridTextColumn Header="Album" Binding="{Binding Album}"/>
+                    <DataGridTextColumn Header="Artist" Binding="{Binding Artist}"/>
+                    <DataGridTextColumn Header="Duration" Binding="{Binding Duration, Converter={StaticResource DurationSecondsToFormattedConverter}}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+        <Border Grid.Row="2" Grid.ColumnSpan="3">
+            <Border.Background>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}"/>
+            </Border.Background>
+            <StackPanel Margin="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="LeftTimeCode"  TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center"   Grid.Column="0" FontSize="14" />
+                    <Slider x:Name="Transport" Margin="10, 0" VerticalAlignment="Center" Grid.Column="1" Background="{x:Null}" TickFrequency="15" Thumb.DragStarted="Transport_DragStarted" Thumb.DragCompleted="Transport_DragCompleted">
+                        <Slider.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
+                        </Slider.Foreground>
+                        <Slider.ToolTip>
+                            <ToolTip Content="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.Value, Converter={StaticResource DurationSecondsToFormattedConverter}}" />
+                        </Slider.ToolTip>
+
+                    </Slider>
+
+                    <TextBlock x:Name="RightTimeCode" TextWrapping="Wrap" Text="-00:00:00" VerticalAlignment="Center" Grid.Column="2" FontSize="14"/>
+                </Grid>
+                <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                    <Button x:Name="PrevButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Click="PrevButton_Click">
+                        <Image Width="36" Source="./Resources/Icons/Controls/prev.png" ToolTip="Skip Backwards"/>
+                    </Button>
+                    <Button x:Name="PlayPauseButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Click="PlayPauseButton_Click">
+                        <Image x:Name="PlayButtonImage" Width="36" Source="./Resources/Icons/Controls/play.png" ToolTip="Play"/>
+                    </Button>
+                    <Button x:Name="NextButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Click="NextButton_Click">
+                        <Image Width="36" Source="./Resources/Icons/Controls/next.png" ToolTip="Skip Forwards"/>
+                    </Button>
+                    <Button x:Name="LoopModeButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">
+                        <Image Width="36" Source="./Resources/Icons/Controls/repeat.png" ToolTip="Repeat"/>
+                    </Button>
+                    <Button x:Name="ShuffleButton" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">
+                        <Image Width="36" Source="./Resources/Icons/Controls/shuffle.png" ToolTip="Shuffle"/>
+                    </Button>
+                    <Slider x:Name="Volume" HorizontalAlignment="Center" VerticalAlignment="Center" Width="108" Value="7" ToolTip="Volume" Cursor="Hand" Maximum="11" SmallChange="0" TickPlacement="TopLeft" ValueChanged="Volume_ValueChanged">
+                        <Slider.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.AppWorkspaceColorKey}}"/>
+                        </Slider.Foreground>
+                    </Slider>
+                    <TextBlock x:Name="VolumeText" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                           TextWrapping="Wrap" Text="{Binding ElementName=Volume, Path=Value, UpdateSourceTrigger=PropertyChanged, StringFormat='00'}" FontSize="18" ToolTip="Volume" MouseUp="VolumeText_MouseUp" >
+                        <TextBlock.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                    <TextBlock x:Name="Separator" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                           TextWrapping="Wrap" Text=" | " FontSize="18" ToolTip="Now Playing" >
+                        <TextBlock.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                    <TextBlock x:Name="NowplayingText" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                           TextWrapping="Wrap" Text="No Song Loaded" FontSize="18" ToolTip="Now Playing" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <Label x:Name="label" Content="Label" HorizontalAlignment="Left" Margin="-81,36,0,0" Grid.Row="2" VerticalAlignment="Top"/>
     </Grid>
 </Window>
